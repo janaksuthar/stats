@@ -148,6 +148,24 @@ st.markdown("""
         font-weight: bold;
         z-index: 1000;
     }
+    
+    .correct-answer {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border-left: 5px solid #28a745;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.1);
+    }
+    
+    .incorrect-answer {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        border-left: 5px solid #dc3545;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.1);
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -407,21 +425,4 @@ def initialize_session_state():
         st.session_state.user_answers = {}
     if 'exam_completed' not in st.session_state:
         st.session_state.exam_completed = False
-    if 'start_time' not in st.session_state:
-        st.session_state.start_time = None
-    if 'student_name' not in st.session_state:
-        st.session_state.student_name = ""
-    if 'student_id' not in st.session_state:
-        st.session_state.student_id = ""
-    if 'security_breaches' not in st.session_state:
-        st.session_state.security_breaches = 0
-    if 'auto_submitted' not in st.session_state:
-        st.session_state.auto_submitted = False
-    if 'exam_locked' not in st.session_state:
-        st.session_state.exam_locked = False
-    if 'attempt_made' not in st.session_state:
-        st.session_state.attempt_made = False
-
-def check_security_breach():
-    """Check for security breaches and auto-submit"""
-    try:
+    if 'start_
