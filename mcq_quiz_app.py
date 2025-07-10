@@ -383,13 +383,13 @@ QUIZ_QUESTIONS = [
 
 def initialize_session_state():
     if 'exam_started' not in st.session_state:
- st.session_state.exam_started = False
+        st.session_state.exam_started = False
     if 'current_question' not in st.session_state:
         st.session_state.current_question = 0
     if 'user_answers' not in st.session_state:
         st.session_state.user_answers = {}
     if 'exam_completed' not in st.session_state:
-        st.session_state.exam_completed = Fal极
+        st.session_state.exam_completed = False
     if 'start_time' not in st.session_state:
         st.session_state.start_time = None
     if 'student_name' not in st.session_state:
