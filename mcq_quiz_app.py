@@ -57,22 +57,6 @@ st.markdown("""
         font-weight: bold;
     }
     
-    .lock-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 10000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-align: center;
-    }
-    
     .disabled-nav {
         opacity: 0.3;
         pointer-events: none;
@@ -110,11 +94,46 @@ st.markdown("""
         margin: 2rem 0;
     }
     
-    .progress-bar-container {
-        background: #e9ecef;
-        border-radius: 10px;
-        padding: 0.5rem;
+    .results-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 2rem;
+        border-radius: 15px;
+        margin-top: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .score-display {
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+        padding: 2rem;
+        border-radius: 15px;
         margin: 1rem 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .score-excellent {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+    }
+    
+    .score-good {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+    }
+    
+    .score-needs-improvement {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+    }
+    
+    .info-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        margin: 0.5rem 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     
     .security-status {
@@ -162,7 +181,22 @@ function handleTabSwitch() {
 // Security breach warning
 function showSecurityBreach() {
     const overlay = document.createElement('div');
-    overlay.className = 'lock-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+    `;
+    
     overlay.innerHTML = `
         <div style="background: white; padding: 3rem; border-radius: 15px; color: #dc3545; max-width: 500px;">
             <h1>🚨 SECURITY BREACH DETECTED!</h1>
@@ -342,6 +376,24 @@ QUIZ_QUESTIONS = [
         "options": ["Go", "Gd", "Au", "Ag"],
         "correct": 2,
         "explanation": "Au comes from the Latin word 'aurum'."
+    },
+    {
+        "question": "Which programming language is known as the 'language of the web'?",
+        "options": ["Python", "JavaScript", "Java", "C++"],
+        "correct": 1,
+        "explanation": "JavaScript enables interactive web pages and runs in browsers."
+    },
+    {
+        "question": "What is the largest ocean on Earth?",
+        "options": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+        "correct": 3,
+        "explanation": "The Pacific Ocean covers about 46% of the water surface."
+    },
+    {
+        "question": "Who developed the theory of relativity?",
+        "options": ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"],
+        "correct": 1,
+        "explanation": "Einstein revolutionized our understanding of space and time."
     }
 ]
 
@@ -373,53 +425,3 @@ def initialize_session_state():
 def check_security_breach():
     """Check for security breaches and auto-submit"""
     try:
-        query_params = st.query_params
-        if query_params.get('security_breach') == 'true':
-            if not st.session_state.exam_completed:
-                st.session_state.auto_submitted = True
-                st.session_state.security_breaches = int(query_params.get('tab_switches', '1'))
-                st.session_state.exam_locked = True
-                submit_exam()
-                st.query_params.clear()
-    except:
-        pass
-
-def submit_exam():
-    """Submit the exam and calculate results"""
-    if st.session_state.exam_completed:
-        return
-    
-    st.session_state.exam_completed = True
-    st.session_state.attempt_made = True
-    st.session_state.end_time = datetime.now()
-    
-    # Calculate score
-    correct_answers = 0
-    total_questions = len(QUIZ_QUESTIONS)
-    
-    for i, question in enumerate(QUIZ_QUESTIONS):
-        if i in st.session_state.user_answers:
-            if st.session_state.user_answers[i] == question['correct']:
-                correct_answers += 1
-    
-    st.session_state.score = correct_answers
-    st.session_state.total_questions = total_questions
-    st.session_state.percentage = (correct_answers / total_questions) * 100
-    
-    save_results_to_csv()
-
-def save_results_to_csv():
-    """Save exam results to CSV file"""
-    try:
-        duration = (st.session_state.end_time - st.session_state.start_time).total_seconds() / 60
-        
-        result_data = {
-            'Student Name': st.session_state.student_name,
-            'Student ID': st.session_state.student_id,
-            'Start Time': st.session_state.start_time.strftime('%Y-%m-%d %H:%M:%S'),
-            'End Time': st.session_state.end_time.strftime('%Y-%m-%d %H:%M:%S'),
-            'Duration (minutes)': round(duration, 2),
-            'Score': st.session_state.score,
-            'Total Questions': st.session_state.total_questions,
-            'Percentage': round(st.session_state.percentage, 2),
-            'Security Breaches': st.session
